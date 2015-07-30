@@ -1,0 +1,107 @@
+﻿
+--1. Crop Марка
+update stamp SET title = replace(title, 'Марка ', '');
+update stamp SET title = replace(title, 'марка ', '');
+update stamp SET title = trim(title);
+
+--1.1 Crop Блок
+update stamp SET title = replace(title, 'Блок ', '');
+update stamp SET title = replace(title, 'блок ', '');
+update stamp SET title = trim(title);
+
+update stamp_excel SET text = replace(text, 'Блок ', '');
+update stamp_excel SET text = replace(text, 'блок ', '');
+update stamp_excel SET text = trim(text);
+
+
+--2 Crop /year
+update stamp SET title = substring(title from 0 for position('/' in title) ) where position('/' in title) > 0;
+update stamp SET title = trim(title);
+
+
+--3. Fix « »
+update stamp SET title = replace(title, '«', '"');
+update stamp SET title = replace(title, '»', '"');
+
+--4. Fix starts with '"'  and ends with '"'
+update stamp SET title = rtrim(title, '"');
+update stamp SET title = ltrim(title, '"');
+ 
+update stamp_excel SET text = rtrim(text, '"');
+update stamp_excel SET text = ltrim(text, '"');
+
+--4. Delete dublication catalog number from stamp_excel
+delete from stamp_excel se where se.catalog_number in (select catalog_number from stamp);
+
+--5. Fix catalog number value with date
+update stamp set catalog_number = se.catalog_number
+from(select catalog_number, text, publish_date from stamp_excel) as se 
+where title = se.text and stamp.publish_date = se.publish_date;
+
+--5.1 Fix catalog number value without date
+update stamp set catalog_number = se.catalog_number 
+from(select catalog_number, text, publish_date from stamp_excel) as se 
+where title = se.text;
+
+--6. Find catalog number by unique date of publish.
+update stamp set catalog_number = se.catalog_number, title = se.text
+from(select catalog_number, text, publish_date from stamp_excel) as se 
+where stamp.publish_date = se.publish_date and se.publish_date in (
+ select se.publish_date from stamp_excel se 
+	group by se.publish_date
+	having count(*) = 1
+);
+
+select se.publish_date, sp.publish_date, sp.catalog_number, se.catalog_number as cat_excel, sp.title, se.text from stamp sp INNER JOIN stamp_excel se 
+ ON sp.publish_date = se.publish_date and se.publish_date in (
+ select se.publish_date from stamp_excel se 
+	group by se.publish_date
+	having count(*) = 1
+);
+
+
+--Fix block checkbox
+update stamp set  block = true where catalog_number like '%b%';
+--Fix small paper
+update stamp set  small_paper = false;
+update stamp set  small_paper = true where catalog_number like '%m%';
+
+select count(*) from stamp_excel;
+
+select * from stamp_excel where publish_date < '2002-01-01' order by publish_date;
+select * from stamp where catalog_number in  ('320', '211');
+
+select * from stamp where stamp_image_id is null
+
+--select se.publish_date, sp.publish_date, sp.catalog_number, se.catalog_number, sp.title, se.text from stamp sp INNER JOIN stamp_excel se 
+ --ON sp.title = se.text and sp.publish_date = se.publish_date;
+
+
+--. Delete the same stamp from stamp table by catalog number.
+
+
+--Copy stamp
+insert into stamp(id, catalog_number, publish_date,title) 
+select nextval('postall_sequence'), catalog_number, publish_date, text from stamp_excel;
+
+--Delete excel stamp
+delete from stamp_excel where catalog_number in('792');
+
+--Delete stamp
+delete from stamp where catalog_number in('119');
+
+
+
+
+select * from stamp where block is null;
+
+update stamp set block = false where block is null;
+
+select title from stamp where catalog_number = '792';
+
+select text from stamp_excel where catalog_number = '1109-1113 (b91)';
+
+select catalog_number, count(*) from stamp
+ GROUP BY catalog_number
+ HAVING count(*) > 1;
+

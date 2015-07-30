@@ -1,0 +1,19 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persitence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence_2_0.xsd"
+	version="2.1">
+
+	<persistence-unit name="postalUnit">
+		<class>com.postal.model.stamp.Image</class>
+		<class>com.postal.model.stamp.Stamp</class>
+		<class>com.postal.model.stamp.Category</class>
+		<class>com.postal.model.stamp.Country</class>
+		<class>com.postal.model.stamp.StampCondition</class>
+		<class>com.postal.model.logging.EventLogging</class>
+		<class>com.postal.model.logging.EventType</class>
+		<class>com.postal.model.user.User</class>
+		<class>com.postal.model.user.UserRole</class>
+		<class>com.postal.model.user.UserStamp</class>
+	</persistence-unit>
+	
+</persistence>

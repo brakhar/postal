@@ -1,0 +1,19 @@
+﻿CREATE TYPE userStampType as (name_stamp varchar(255), user_name varchar(255), quantity int, year int);
+
+DROP FUNCTION GET_USER_STAMPS(v_user_name VARCHAR(255), start_index int, number_to_return int);
+
+CREATE OR REPLACE FUNCTION GET_USER_STAMPS(v_user_name VARCHAR(255), start_index int, number_to_return int) RETURNS setof userStampType  AS $$
+    DECLARE
+      r userStampType%rowtype;
+    BEGIN
+	FOR r IN SELECT sp.name, sp.year, sp.image_id, us.quantity FROM stamp sp LEFT JOIN user_stamp us 
+		ON us.stamp_id = sp.id AND us.user_name = v_user_name offset start_index limit number_to_return  
+	LOOP
+		RETURN NEXT r;
+	END LOOP;
+	RETURN;
+    END;
+$$ LANGUAGE plpgsql;
+
+
+select * FROM GET_USER_STAMPS('mykong', 0, 10);

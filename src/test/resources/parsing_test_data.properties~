@@ -1,0 +1,23 @@
+parsing.test.catalogNumber=1432
+parsing.test.fullTitle=Марка «І Європейські ігри. Баку 2015».
+parsing.test.shortTitle=Поштова марка № 1432 «І Європейські ігри. Баку 2015».
+parsing.test.format=Формат марки – 40х28 мм.
+parsing.test.denominationStamp=Номінал марки – 4,40 грн.
+parsing.test.perforation=Перфорація  гребінчаста – 14:14 1/4.
+parsing.test.numberStampInPiecePaper=Кількість марок в аркуші – 12 (3х4).
+parsing.test.circulation=Тираж марки – 130 000 примірників.
+parsing.test.design=Дизайн Володимира Жданова.
+parsing.test.typePublish=Марка – багатоколірна; спосіб  друку – офсет.
+parsing.test.specialNotes=На полях маркового аркуша надруковано штриховий код – 4823027139395. Зам. 15-3349. 26.05.2015.
+parsing.test.originOfPublish=Марку надруковано на ДП «Поліграфічний комбінат «Україна» по виготовленню цінних паперів».
+
+parsing.keyWords.shortTitle=Поштова марка №
+parsing.keyWords.format=Формат марки
+parsing.keyWords.denominationStamp=Номінал марки
+parsing.keyWords.perforation=Перфорація
+parsing.keyWords.numberStampInPiecePaper=Кількість марок в
+parsing.keyWords.circulation=Тираж марки
+parsing.keyWords.design=Дизайн
+parsing.keyWords.typePublish=Марка
+parsing.keyWords.specialNotes=На полях
+parsing.keyWords.originOfPublish=Марку надруковано

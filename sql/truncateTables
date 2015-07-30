@@ -1,0 +1,4 @@
+﻿truncate stamp_category;
+truncate category CASCADE;
+truncate stamp CASCADE;
+truncate image;

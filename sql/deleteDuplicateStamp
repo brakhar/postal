@@ -1,0 +1,26 @@
+﻿    CREATE OR REPLACE FUNCTION removeDublicates() 
+    RETURNS void AS $$
+    DECLARE
+	uniqueStamp stamp%rowtype;
+	dublicateStamp stamp%rowtype;
+    BEGIN
+	FOR uniqueStamp IN SELECT * FROM stamp
+	LOOP
+	    FOR dublicateStamp IN SELECT * FROM stamp WHERE stamp.id>uniqueStamp.id and stamp.name=uniqueStamp.name
+	    LOOP
+		EXECUTE deleteStamp(dublicateStamp.id, dublicateStamp.image_id, dublicateStamp.big_image_id);
+	    END LOOP;
+	END LOOP;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE OR REPLACE FUNCTION deleteStamp(v_stamp_id in numeric, v_image_id_small in bigint, v_image_id_big in bigint) 
+    RETURNS void AS $$
+    BEGIN
+	    RAISE NOTICE 'deleting stamp with id(%)', v_stamp_id;
+	    DELETE FROM stamp_category WHERE stamp_id = v_stamp_id;	
+	    DELETE FROM stamp WHERE stamp.id = v_stamp_id;
+	    DELETE FROM image WHERE id = v_image_id_small or id = v_image_id_big;
+    END;
+    $$ LANGUAGE plpgsql;
+

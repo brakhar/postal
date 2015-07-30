@@ -1,0 +1,44 @@
+#flyBox {
+    position: fixed;
+    top:0px;
+    left:0px;
+    z-index: 998;
+    height: 100%;
+    width: 100%;
+    background-image: url(http://i1122.photobucket.com/albums/l523/Long_Islander/backgroundFlyBox.png);
+    display: none;
+}
+#flyBox .borderWindow {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000;
+    text-align: left;
+    background-image: url(http://i1122.photobucket.com/albums/l523/Long_Islander/backgroundFlyBox.png);
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    padding: 12px;
+}
+#flyBox .container {
+    position: relative;
+}
+#flyBox #closeButton {
+    position:absolute;
+    top: -15px;
+    right: -15px;
+}
+#flyBox .content {
+    background-color: #FFF;
+    overflow:hidden;
+}
+.colheadingL {
+    background-color: #383837;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #FFFFFF;
+    padding: 2px;
+    text-align: left;
+}
+.error{
+    color: darkred;
+}

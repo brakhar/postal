@@ -1,0 +1,5 @@
+﻿--select count(*) from stamp where isBlock = true;
+--select isBlock from stamp where catalog_number = 'b 123';
+
+update stamp SET isBlock = true where lower(full_title) like '%блок%';
+select count(*) from stamp where  lower(full_title) like '%блок%'
