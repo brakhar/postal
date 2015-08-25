@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Stamp List</title>
     <script type="text/javascript">
-
+        var isTableShown = true;
         var stampListTable;
 
         jQuery.fn.dataTableExt.oApi.fnPagingInfo = function ( oSettings )
@@ -48,43 +48,68 @@
                 "bAutoWidth": false,
                 "aoColumns": [
                     { "width": "2%",
-                        "mData": "id",
-                        "mRender": function (stampId) {
+                      "mData": "id",
+                      "mRender": function (stampId) {
                             return "<input type='checkbox' id='" + stampId + "'/>";
-                        }},
+                      },
+                      "bSortable": false
+                    },
                     { "width": "2%",
-                        "mData": "catalogNumber" },
+                      "mData": "catalogNumber",
+                      "bSortable": false
+                    },
                     { "width": "15%",
-                        "mData": "stampImgId",
-                        "mRender": function (stampImgId) {
-                            return "<img src='../image/"+ stampImgId +".do'/>";
-                        }
+                      "mData": "stampImgId",
+                      "mRender": function (stampImgId) {
+                            if(stampImgId != undefined && stampImgId != null){
+                                return "<img src='../image/"+ stampImgId +".do' height='80'/>";
+                            } else {
+                                return "";
+                            }
+                        },
+                      "bSortable": false
                     },
                     { "width": "25%",
-                        "mData": "title" },
+                      "mData": "title",
+                      "bSortable": false
+                    },
                     { "width": "10%",
-                        "mData": "dateEdition" },
+                      "mData": "dateEdition",
+                      "bSortable": false
+                    },
                     { "width": "15%",
-                        "mRender": function (oObj, type, full) {
+                      "mRender": function (oObj, type, full) {
                             return "<div>Full list of stamps<br>" +
                                     "<input type='number' step='1' value='" + full.flq + "' onChange='saveQuantity(" + full.id + ", 1, $(this).val());'/>" +
                                     "</div>" +
                                     "<div>1 line of stamps<br>" +
                                     "<input type='number' step='1' value='" + full.olq + "' onChange='saveQuantity(" + full.id + ", 2, $(this).val());'/>" +
                                     "</div>" +
-                                    "<div>One stamp<br>" +
+                                    "<div>One stamp(block)<br>" +
                                     "<input type='number' step='1' value='" + full.opq + "' onChange='saveQuantity(" + full.id + ", 3, $(this).val());'/>" +
                                     "</div>";
-                        }
+                        },
+                      "bSortable": false
                     },
                     {   "width": "2%",
                         "mRender": function (oObj, type, full) {
                             return "<a class='editStamp' onClick='editStampFunction(\"../stamp/edit/" + full.id + ".do\"); return false;' >Edit</a>";
-                        }
+                        },
+                        "bSortable": false
                     }
 
                 ]
             } );
+
+            $('#stampTable').dataTable().columnFilter({ sPlaceHolder: "head:after",
+                aoColumns: [
+                    null,
+                    { type: "text" },
+                    null,
+                    { type: "text"},
+                    { type: "text" }
+                ]
+            });
 
 
             <c:if test="${pageContext.request.userPrincipal.name == null}">
@@ -92,56 +117,64 @@
             stampListTable.fnSetColumnVis(5, false);
             </c:if>
 
-            $("#dialog-stamp-edit").dialog(
-                    {
-                        autoOpen: false,
-                        width: 1300,
-                        height:600,
-                        modal: true
-                    });
-
         } );
 
         addNewStamp = function(){
-            $("#iframeId").attr("src", "../stamp/add.do");
-            $( "#dialog-stamp-edit" ).dialog( "open" );
+            var stampListDivWrapper = $("#stampListPanel");
+            var stampEditPanelWrapper = $("#stampEditPanel");
+
+            $.get("../stamp/add.do", function(data) {
+                stampEditPanelWrapper.html(data);
+            });
+
+            stampListDivWrapper.hide();
+            stampEditPanelWrapper.show();
         };
 
         editStampFunction = function(link){
+            var stampListDivWrapper = $("#stampListPanel");
+            var stampEditPanelWrapper = $("#stampEditPanel");
 
-            $("#iframeId").attr("src", link);
-            $("#dialog-stamp-edit" ).dialog( "open" );
+            $.get(link, function(data) {
+                stampEditPanelWrapper.html(data);
+            });
 
+            stampListDivWrapper.hide();
+            stampEditPanelWrapper.show();
         }
 
     </script>
 </head>
 <body>
-<p><input type="button"  onclick="addNewStamp();" value="Add new"/></p>
 
-<div id="dialog-stamp-edit" title="Add(update) stamp" style="display: none;">
-    <iframe id="iframeId" frameborder="0" scrolling="yes" width="100%" height="100%"></iframe>
-</div>
 
-<table>
-    <tr><td>
+
+<div id="stampEditPanel" style="display:none"></div>
+
+<div id="stampListPanel">
+    <div id="toolsPanel">
+        <button type="button" onclick="addNewStamp();">Add new</button>
         <button type="button" onClick="removeSelectedItems();">Delete</button>
-    </tr></td>
-    <tr><td>
-        <table data-page-length="5" id="stampTable" class="display" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-                <th>Select</th>
-                <th>Catalog Number</th>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Date Edition</th>
-                <th>Quanity</th>
-                <th>Edit</th>
-            </tr>
-            </thead>
+    </div>
+    <div>
+        <table>
+            <tr><td>
+                <table data-page-length="5" id="stampTable" class="display" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Catalog Number</th>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Date Edition</th>
+                        <th>Quanity</th>
+                        <th>Edit</th>
+                    </tr>
+                    </thead>
+                </table>
+            </td></tr>
         </table>
-    </td></tr>
-</table>
+    </div>
+</div>
 </body>
 </html>

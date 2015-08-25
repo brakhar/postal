@@ -9,11 +9,9 @@
         </encoder>
     </appender>
 
-<!--
-    <logger name="com.postal.service" level="DEBUG" additivity="false">
+    <logger name="com.postal.service" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
--->
 
     <!-- By default, the level of the root level is set to DEBUG -->
     <root level="ERROR">

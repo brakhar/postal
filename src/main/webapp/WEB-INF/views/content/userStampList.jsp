@@ -28,7 +28,7 @@
 
         $(document).ready(function() {
 
-            stampListTable = $("#stampTable").dataTable( {
+            stampListTable = $("#userStampTable").dataTable( {
                     "bProcessing": true,
                     "bServerSide": true,
                     "orderable": false,
@@ -42,7 +42,7 @@
                         { "mData": "catalogNumber" },
                         { "mData": "stampImgId",
                             "mRender": function (stampImgId) {
-                                return "<img src='../image/"+ stampImgId +".do'/>";
+                                return "<img src='../image/"+ stampImgId +".do' height='80'/>";
                             }
                         },
                         { "mData": "title" },
@@ -55,7 +55,7 @@
                                         "<div>1 line of stamps<br>" +
                                         "<input type='number' step='1' value='" + full.olq + "' onChange='saveQuantity(" + full.id + ", 2, $(this).val());'/>" +
                                         "</div>" +
-                                        "<div>One stamp<br>" +
+                                        "<div>One stamp(block)<br>" +
                                         "<input type='number' step='1' value='" + full.opq + "' onChange='saveQuantity(" + full.id + ", 3, $(this).val());'/>" +
                                         "</div>";
                             }
@@ -63,15 +63,23 @@
                     ]
             } );
 
+            $('#userStampTable').dataTable().columnFilter({ sPlaceHolder: "head:after",
+                aoColumns: [
+                    { type: "text" },
+                    null,
+                    { type: "text"},
+                    { type: "text"},
+                    null
+                ]
+            });
         } );
-
 
     </script>
 </head>
 <body>
     <table>
         <tr><td>
-            <table data-page-length="5" id="stampTable" class="display" cellspacing="0" width="100%">
+            <table data-page-length="5" id="userStampTable" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Catalog number</th>

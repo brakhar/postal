@@ -15,9 +15,9 @@ public class WikiStamp {
     private String title;
     private String denomination;
 
-    public WikiStamp(byte[] image, String author, Date publishingDate, String circulation, String catalogNumber, String title, String denomination) {
+    public WikiStamp(byte[] image, String design, Date publishingDate, String circulation, String catalogNumber, String title, String denomination) {
         this.image = image;
-        this.design = author;
+        this.design = design;
         this.publishingDate = publishingDate;
         this.circulation = circulation;
         this.catalogNumber = catalogNumber;

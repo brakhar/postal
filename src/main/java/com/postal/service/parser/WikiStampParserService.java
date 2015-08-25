@@ -79,33 +79,47 @@ public class WikiStampParserService extends AbstractStampParser{
 
     private void updateStamp(WikiStamp wikiStamp) {
         Stamp stamp = null;
+        boolean isNeededToUpdate = false;
         try{
             stamp = stampService.getByCatalogNumber(wikiStamp.getCatalogNumber());
         } catch (Exception ex){
             logger.error("Error during getting stamp. Update stamp. Catalog Number -" + wikiStamp.getCatalogNumber() + " ", ex);
         }
-        if(stamp != null && (stamp.getStampImageId() == null || stamp.getStampImageId() == 0)){
+        if(stamp == null) return;
+
+        if ((wikiStamp.getImage() != null && wikiStamp.getImage().length > 0) && (stamp.getStampImageId() == null || stamp.getStampImageId() == 0)){
+            logger.info("StampImg needed update.");
             stamp.setStampImageId(imageService.insertImage(new Image(wikiStamp.getImage())));
+            isNeededToUpdate = true;
+        }
 
-            if(stamp.getCirculation() == null || stamp.getCirculation().trim().length() == 0){
-                stamp.setCirculation(wikiStamp.getCirculation());
-            }
+        if((wikiStamp.getCirculation() != null && wikiStamp.getCirculation().trim().length() > 0) && (stamp.getCirculation() == null || stamp.getCirculation().trim().length() == 0)){
+            logger.info("Circulation needed update." + wikiStamp.getCirculation());
+            stamp.setCirculation(wikiStamp.getCirculation());
+            isNeededToUpdate = true;
+        }
 
-            if(stamp.getDenomination() == null || stamp.getDenomination().trim().length() == 0){
-                stamp.setDenomination(wikiStamp.getDenomination());
-            }
+        if((wikiStamp.getDenomination() != null && wikiStamp.getDenomination().trim().length() > 0) && (stamp.getDenomination() == null || stamp.getDenomination().trim().length() == 0)){
+            logger.info("Denomination needed update." + wikiStamp.getDenomination());
+            stamp.setDenomination(wikiStamp.getDenomination());
+            isNeededToUpdate = true;
+        }
 
-            if(stamp.getDesign() == null || stamp.getDesign().trim().length() == 0) {
-                stamp.setDesign(wikiStamp.getDesign());
-            }
+        if((wikiStamp.getDesign() != null && wikiStamp.getDesign().trim().length() > 0) && (stamp.getDesign() == null || stamp.getDesign().trim().length() == 0)) {
+            logger.info("Design needed update." + wikiStamp.getDesign());
+            stamp.setDesign(wikiStamp.getDesign());
+            isNeededToUpdate = true;
+        }
 
+        if(isNeededToUpdate){
             try {
                 stampService.update(stamp);
                 System.out.println("Stamp updated. Stamp catalog number: " + stamp.getCatalogNumber());
             } catch (PostalRepositoryException e) {
-                logger.error("Error during updating stamp with Wiki Data");
+                logger.error("Error during updating stamp with Wiki Data" + stamp.getCatalogNumber(), e);
             }
         }
+
     }
 
 
@@ -215,7 +229,7 @@ public class WikiStampParserService extends AbstractStampParser{
         int numberStampThirdTable = getNumberStampThirdTable(page);
 
         String imageSrc = null;
-        String author = null;
+        String design = null;
         String publishDate = null;
         String circulation = null;
         String denomination = null;
@@ -235,12 +249,12 @@ public class WikiStampParserService extends AbstractStampParser{
 
                 if((catalogNumber != null && catalogNumber.trim().length() > 0) && (isNeedForUpdate(catalogNumber) || !getOnlyForUpdate)){
                     imageSrc = (String)getExprXpath(ExprXPathEnum.IMG_SRC_TABLE1, i).evaluate(page, XPathConstants.STRING);
-                    author = (String)getExprXpath(ExprXPathEnum.AUTHOR_TABLE1, i).evaluate(page, XPathConstants.STRING);
+                    design = (String)getExprXpath(ExprXPathEnum.DESIGN_TABLE1, i).evaluate(page, XPathConstants.STRING);
                     circulation = (String)getExprXpath(ExprXPathEnum.CIRCULATION_TABLE1, i).evaluate(page, XPathConstants.STRING);
                     denomination = (String)getExprXpath(ExprXPathEnum.DENOMINATION_TABLE1, i).evaluate(page, XPathConstants.STRING);
                     title  = (String)getExprXpath(ExprXPathEnum.TITLE_TABLE1, i).evaluate(page, XPathConstants.STRING);
 
-                    wikiStamps.add(new WikiStamp(getWikiImageContent(imageSrc), author, null, circulation, catalogNumber, title, denomination));
+                    wikiStamps.add(new WikiStamp(getWikiImageContent(imageSrc), design, null, circulation, catalogNumber, title, denomination));
                 }
             }
 
@@ -252,12 +266,12 @@ public class WikiStampParserService extends AbstractStampParser{
                 if((catalogNumber != null && catalogNumber.trim().length() > 0) && (isNeedForUpdate(catalogNumber) || !getOnlyForUpdate)){
 
                     imageSrc = (String) getExprXpath(ExprXPathEnum.IMG_SRC_TABLE2, i).evaluate(page, XPathConstants.STRING);
-                    author = (String) getExprXpath(ExprXPathEnum.AUTHOR_TABLE2, i).evaluate(page, XPathConstants.STRING);
+                    design = (String) getExprXpath(ExprXPathEnum.DESIGN_TABLE2, i).evaluate(page, XPathConstants.STRING);
                     circulation = (String) getExprXpath(ExprXPathEnum.CIRCULATION_TABLE2, i).evaluate(page, XPathConstants.STRING);
                     denomination = (String) getExprXpath(ExprXPathEnum.DENOMINATION_TABLE2, i).evaluate(page, XPathConstants.STRING);
                     title = (String) getExprXpath(ExprXPathEnum.TITLE_TABLE2, i).evaluate(page, XPathConstants.STRING);
 
-                    wikiStamps.add(new WikiStamp(getWikiImageContent(imageSrc), author, null, circulation, catalogNumber, title, denomination));
+                    wikiStamps.add(new WikiStamp(getWikiImageContent(imageSrc), design, null, circulation, catalogNumber, title, denomination));
                 }
             }
 
@@ -268,12 +282,12 @@ public class WikiStampParserService extends AbstractStampParser{
 
                 if((catalogNumber != null && catalogNumber.trim().length() > 0) && (isNeedForUpdate(catalogNumber) || !getOnlyForUpdate)){
                     imageSrc = (String) getExprXpath(ExprXPathEnum.IMG_SRC_TABLE3, i).evaluate(page, XPathConstants.STRING);
-                    author = (String) getExprXpath(ExprXPathEnum.AUTHOR_TABLE3, i).evaluate(page, XPathConstants.STRING);
+                    design = (String) getExprXpath(ExprXPathEnum.DESIGN_TABLE3, i).evaluate(page, XPathConstants.STRING);
                     circulation = (String) getExprXpath(ExprXPathEnum.CIRCULATION_TABLE3, i).evaluate(page, XPathConstants.STRING);
                     denomination = (String) getExprXpath(ExprXPathEnum.DENOMINATION_TABLE3, i).evaluate(page, XPathConstants.STRING);
                     title = (String) getExprXpath(ExprXPathEnum.TITLE_TABLE3, i).evaluate(page, XPathConstants.STRING);
 
-                    wikiStamps.add(new WikiStamp(getWikiImageContent(imageSrc), author, null, circulation, catalogNumber, title, denomination));
+                    wikiStamps.add(new WikiStamp(getWikiImageContent(imageSrc), design, null, circulation, catalogNumber, title, denomination));
                 }
             }
 
@@ -289,7 +303,7 @@ public class WikiStampParserService extends AbstractStampParser{
         for (int i = 2; i <= numberStampFirstTable; i++){
             getExprXpath(ExprXPathEnum.CATALOG_NUMBER_TABLE1, i);
             getExprXpath(ExprXPathEnum.IMG_SRC_TABLE1, i);
-            getExprXpath(ExprXPathEnum.AUTHOR_TABLE1, i);
+            getExprXpath(ExprXPathEnum.DESIGN_TABLE1, i);
             getExprXpath(ExprXPathEnum.CIRCULATION_TABLE1, i);
             getExprXpath(ExprXPathEnum.DENOMINATION_TABLE1, i);
             getExprXpath(ExprXPathEnum.TITLE_TABLE1, i);
@@ -299,7 +313,7 @@ public class WikiStampParserService extends AbstractStampParser{
         for (int i = 2; i <= numberStampSecondTable; i++){
             getExprXpath(ExprXPathEnum.CATALOG_NUMBER_TABLE2, i);
             getExprXpath(ExprXPathEnum.IMG_SRC_TABLE2, i);
-            getExprXpath(ExprXPathEnum.AUTHOR_TABLE2, i);
+            getExprXpath(ExprXPathEnum.DESIGN_TABLE2, i);
             getExprXpath(ExprXPathEnum.CIRCULATION_TABLE2, i);
             getExprXpath(ExprXPathEnum.DENOMINATION_TABLE2, i);
             getExprXpath(ExprXPathEnum.TITLE_TABLE2, i);
@@ -309,7 +323,7 @@ public class WikiStampParserService extends AbstractStampParser{
         for (int i = 2; i <= numberStampThirdTable; i++){
             getExprXpath(ExprXPathEnum.CATALOG_NUMBER_TABLE3, i);
             getExprXpath(ExprXPathEnum.IMG_SRC_TABLE3, i);
-            getExprXpath(ExprXPathEnum.AUTHOR_TABLE3, i);
+            getExprXpath(ExprXPathEnum.DESIGN_TABLE3, i);
             getExprXpath(ExprXPathEnum.CIRCULATION_TABLE3, i);
             getExprXpath(ExprXPathEnum.DENOMINATION_TABLE3, i);
             getExprXpath(ExprXPathEnum.TITLE_TABLE3, i);
@@ -347,7 +361,7 @@ public class WikiStampParserService extends AbstractStampParser{
         List<XPathExpression> pathExpressionList = exprXpathMap.get(exprXPathEnum);
 
         if(pathExpressionList.size() <= rowNumber - 2) {
-           pathExpressionList.add(initXPathExperession(exprXPathEnum, rowNumber));
+            pathExpressionList.add(initXPathExperession(exprXPathEnum, rowNumber));
         }
         return pathExpressionList.get(rowNumber - 2);
     }
@@ -357,9 +371,9 @@ public class WikiStampParserService extends AbstractStampParser{
             exprXpathMap.put(ExprXPathEnum.IMG_SRC_TABLE1, new ArrayList<XPathExpression>());
             exprXpathMap.put(ExprXPathEnum.IMG_SRC_TABLE2, new ArrayList<XPathExpression>());
             exprXpathMap.put(ExprXPathEnum.IMG_SRC_TABLE3, new ArrayList<XPathExpression>());
-            exprXpathMap.put(ExprXPathEnum.AUTHOR_TABLE1, new ArrayList<XPathExpression>());
-            exprXpathMap.put(ExprXPathEnum.AUTHOR_TABLE2, new ArrayList<XPathExpression>());
-            exprXpathMap.put(ExprXPathEnum.AUTHOR_TABLE3, new ArrayList<XPathExpression>());
+            exprXpathMap.put(ExprXPathEnum.DESIGN_TABLE1, new ArrayList<XPathExpression>());
+            exprXpathMap.put(ExprXPathEnum.DESIGN_TABLE2, new ArrayList<XPathExpression>());
+            exprXpathMap.put(ExprXPathEnum.DESIGN_TABLE3, new ArrayList<XPathExpression>());
             exprXpathMap.put(ExprXPathEnum.TITLE_TABLE1, new ArrayList<XPathExpression>());
             exprXpathMap.put(ExprXPathEnum.TITLE_TABLE2, new ArrayList<XPathExpression>());
             exprXpathMap.put(ExprXPathEnum.TITLE_TABLE3, new ArrayList<XPathExpression>());
@@ -386,7 +400,7 @@ public class WikiStampParserService extends AbstractStampParser{
             case IMG_SRC_TABLE1: case IMG_SRC_TABLE2: case IMG_SRC_TABLE3:
                 expression = wikiStampParserConfig.getxPathImageSrc();
                 break;
-            case AUTHOR_TABLE1: case AUTHOR_TABLE2: case AUTHOR_TABLE3:
+            case DESIGN_TABLE1: case DESIGN_TABLE2: case DESIGN_TABLE3:
                 expression = wikiStampParserConfig.getxPathDesign();
                 break;
             case TITLE_TABLE1: case TITLE_TABLE2: case TITLE_TABLE3:

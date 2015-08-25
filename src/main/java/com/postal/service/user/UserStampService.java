@@ -1,6 +1,7 @@
 package com.postal.service.user;
 
 import com.postal.exception.PostalRepositoryException;
+import com.postal.model.stamp.StampType;
 import com.postal.model.user.User;
 import com.postal.model.user.UserStamp;
 import com.postal.model.user.UserStampPK;
@@ -46,5 +47,35 @@ public class UserStampService extends CRUDService<UserStamp, UserStampPK> {
     @Transactional(readOnly = true)
     public UserStamp findByUserNameStampId(String userName, Long stampId) {
         return ((UserStampRepository)getRepository()).findByUserNameStampId(userName, stampId);
+    }
+
+    public Page<UserStamp> findByFilter(String userName, String searchByCatalogNumber, String searchByTitle, Integer searchByYear, PageRequest pageRequest) {
+        return ((UserStampRepository)getRepository()).findByFilter(userName, searchByCatalogNumber, searchByTitle, searchByYear, pageRequest);
+    }
+
+    public Integer getTotalNumberBlocksByQuantity(int quantity, String userName) {
+        return ((UserStampRepository)getRepository()).countByUserUserNameAndStampBlockAndOnePieceQuantity(userName, true, quantity);
+    }
+
+    public Integer getMaxBlockQuantity(String userName) {
+        return ((UserStampRepository)getRepository()).maxByOnePieceAndUserUserNameAndBlock(userName, true);
+    }
+
+    public Integer getBoughtUniqueTotalNumber(StampType stampType, String userName) {
+        switch (stampType){
+            case BLOCK:
+                return ((UserStampRepository)getRepository()).countByUserUserNameAndStampBlock(userName, true);
+
+            case SMALL_PAPER:
+                break;
+
+            case STANDART:
+                break;
+            case OTHER:
+                break;
+            default:
+
+        }
+        return null;
     }
 }

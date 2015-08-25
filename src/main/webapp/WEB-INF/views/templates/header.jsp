@@ -3,20 +3,29 @@
 <%@page session="true"%>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css"/>
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/jquery.dataTables.css"/>"/>
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/postal.css"/>" />
-	<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<script type="text/javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+	<link rel="stylesheet" type="text/css" href="<c:url value="/bootstrap/css/bootstrap-datepicker.min.css"/>" />
+	<link rel="stylesheet" type="text/css" href="<c:url value="/bootstrap/css/bootstrap.min.css"/>" />
+	<link rel="stylesheet" type="text/css" href="<c:url value="/bootstrap/css/fileinput.min.css"/>" />
+
+	<script type="text/javascript" src="<c:url value="/jquery/js/jquery.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/bootstrap/js/moment.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/bootstrap/js/bootstrap.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/bootstrap/js/bootstrap-datepicker.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/bootstrap/js/fileinput.min.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/resources/js/jquery.dataTables.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/resources/js/jquery.dataTables.columnFilter.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/stampUtils.js"/>"></script>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
 </head>
 <body>
 	<h1><a href="${pageContext.request.contextPath}/home.do">Postal</a></h1>
 	<div>
 		<table>
 			<tr>
-				<td colspan="1"><a href="${pageContext.request.contextPath}/stamp/add.do">Add stamp</a></td>&nbsp;&nbsp;
 				<td colspan="1"><a href="${pageContext.request.contextPath}/stamp/list.do">List of stamp</a></td>
 			</tr>
 		</table>
@@ -40,6 +49,7 @@
 					href="javascript:formSubmit()"> Logout</a>
 				<a href="${pageContext.request.contextPath}/stamp/userStampList.do">My stamps</a>
 				<a href="${pageContext.request.contextPath}/stamp/toBuyStamp.do">To Buy</a>
+				<a href="${pageContext.request.contextPath}/chart/stampChart.do">Statistics</a>
 			</h2>
 		</c:when>
 		<c:when test="${pageContext.request.userPrincipal.name == null}">

@@ -62,6 +62,14 @@
 					<td>Password:</td>
 					<td><input type='password' name='password' /></td>
 				</tr>
+
+				<c:if test="${empty loginUpdate}">
+					<tr>
+						<td></td>
+						<td>Remember Me: <input type="checkbox" name="remember-me" /></td>
+					</tr>
+				</c:if>
+
 				<tr>
 					<td colspan='2'><input name="submit" type="submit"
 						value="submit" /></td>

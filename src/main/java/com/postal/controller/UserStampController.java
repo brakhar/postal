@@ -8,7 +8,6 @@ import com.postal.model.user.UserStampPK;
 import com.postal.service.stamp.StampService;
 import com.postal.service.user.UserService;
 import com.postal.service.user.UserStampService;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -47,29 +46,36 @@ public class UserStampController extends AbstractController{
     @RequestMapping(value = "/stamp/loadUserStamps.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     private @ResponseBody
     String getUserStamps(HttpServletRequest request) throws JSONException {
-        String searchValue = request.getParameter("sSearch");
-
         PageRequest pageRequest = getPageRequest(request);
 
-        Authentication auth = getAuthentication();
-        String name = auth.getName();
+        String searchValue = request.getParameter("sSearch");
 
-        User authorizedUser = userService.getEntityById(name);
+        String searchByCatalogNumber = request.getParameter("sSearch_0");
+        String searchByTitle = isEmpty(request.getParameter("sSearch_2")) ? "" : "%" + request.getParameter("sSearch_2") + "%";
+        Integer searchByYear = isEmpty(request.getParameter("sSearch_3")) ? 0 : Integer.parseInt(request.getParameter("sSearch_3"));
+
         Integer yearValue = 0;
 
-        Page<UserStamp> userStamps = userStampService.findByUser(pageRequest, authorizedUser);
+        User user = getUser();
 
-        if(searchValue ==null || searchValue.trim().length() == 0){
-            userStamps = userStampService.findByUser(pageRequest, authorizedUser);
+        Page<UserStamp> userStamps = null;
+
+        if(user == null) return "";
+
+        if(!isEmpty(searchByCatalogNumber) || !isEmpty(searchByTitle) || searchByYear != 0){
+            userStamps = userStampService.findByFilter(user.getUserName(), searchByCatalogNumber, searchByTitle, searchByYear, pageRequest);
         } else {
-            if(isInteger(searchValue)){
-                yearValue = Integer.parseInt(searchValue);
+            if (searchValue == null || searchValue.trim().length() == 0) {
+                userStamps = userStampService.findByUser(pageRequest, user);
+            } else {
+                if (isInteger(searchValue)) {
+                    yearValue = Integer.parseInt(searchValue);
+                }
+                searchValue = "%" + searchValue + "%";
+                userStamps = userStampService.findBySearchValue(searchValue, user.getUserName(), yearValue, pageRequest);
             }
-            searchValue = "%" + searchValue + "%";
-            userStamps = userStampService.findBySearchValue(searchValue, authorizedUser.getUserName(), yearValue, pageRequest);
         }
-
-        return getJsonUserStampList(userStamps);
+        return getJSONUserStampList(userStamps);
     }
 
     @RequestMapping(value = "/stamp/updateUserStampQuantity.do", method = RequestMethod.GET)
@@ -184,6 +190,7 @@ public class UserStampController extends AbstractController{
     }
 
 
+/*
     private String getJsonUserStampList(Page<UserStamp> userStamps) throws JSONException {
         JSONArray jsonStampList = new JSONArray();
 
@@ -197,7 +204,9 @@ public class UserStampController extends AbstractController{
         jsonObject.put("aaData", jsonStampList);
         return jsonObject.toString();
     }
+*/
 
+/*
     private JSONObject getJsonUserStamp(UserStamp userStamp) throws JSONException {
         JSONObject jsonStamp;
         JSONArray jsonArrayUserStampQuantityByStampType = new JSONArray();
@@ -218,4 +227,34 @@ public class UserStampController extends AbstractController{
 
         return jsonStamp;
     }
+*/
+
+    @RequestMapping(value = "/stamp/toBuyStamp.do", method = RequestMethod.GET)
+    private ModelAndView getToBuyStamp(){
+        return new ModelAndView("toByStampPage");
+    }
+
+    @RequestMapping(value = "/stamp/loadToBuyUserStamps.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    private @ResponseBody String getToBuyUserStamps(HttpServletRequest request) throws JSONException {
+        Authentication authentication = getAuthentication();
+
+        Page<Stamp> stamps = null;
+
+        PageRequest pageRequest = getPageRequest(request);
+
+        String searchValue = request.getParameter("sSearch");
+        switch (searchValue){
+            case "block":
+                stamps = stampService.findBlockToBuyUser(pageRequest, authentication.getName());
+                break;
+            case "smallPaper":
+                stamps = stampService.findSmallPaperToBuyUser(pageRequest, authentication.getName());
+                break;
+            default:
+                stamps = stampService.findStampsToBuyUser(pageRequest, authentication.getName());
+        }
+
+        return getJSONStampList(stamps);
+    }
+
 }

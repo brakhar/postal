@@ -23,17 +23,16 @@ public class PostalCronSchedule {
     @Autowired
     private WikiStampParserService wikiStampParserService;
 
-    @Scheduled(cron = "00 00 23 * * *")
+    @Scheduled(cron = "00 40 23 * * *")
     public void startCronJob(){
-        stampSiteParser.parseSite(false, 0, 0);
+        stampSiteParser.parseSite(false, 1, 0);
     }
 
-    //@Scheduled(cron = "00 14 12 * * *")
-    @Scheduled(fixedDelay = 60000)
+//    @Scheduled(fixedDelay = 60000)
     public void startFixedDelay(){
         if(!isRun){
             isRun = true;
-            for (int i = 1992; i <= 2015; i++){
+            for (int i = 2002; i <= 2002; i++){
                 System.out.println("Year - " + i);
                 wikiStampParserService.updateStampByYear(i);
             }

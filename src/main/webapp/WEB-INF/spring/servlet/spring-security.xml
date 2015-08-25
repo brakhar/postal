@@ -22,7 +22,12 @@
         <logout logout-success-url="/login.do?logout" />
         <!-- enable csrf protection -->
         <csrf />
+        <remember-me
+                token-validity-seconds="1209600"
+                remember-me-parameter="remember-me"
+                data-source-ref="dataSource" />
     </http>
+
 
     <beans:bean id="userDetailsService" class="com.postal.service.user.ExtnUserDetailsService"/>
 

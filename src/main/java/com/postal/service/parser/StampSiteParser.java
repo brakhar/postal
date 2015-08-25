@@ -80,16 +80,10 @@ public class StampSiteParser extends AbstractStampParser{
             parseStampPage(pageNumberRequest, isFirstTime);
             return true;
         }
-        if (isFirstTime){
-
-            List<Integer> pageNumbers = getPageNumbers();
-            for(Integer pageNumber : pageNumbers){
-                logger.debug("Number of page:" + pageNumber);
-                parseStampPage(pageNumber, isFirstTime);
-            }
-        } else{
-            parseStampPage(1, isFirstTime);
-            parseStampPage(2, isFirstTime);
+        List<Integer> pageNumbers = getPageNumbers();
+        for(Integer pageNumber : pageNumbers){
+            logger.debug("Number of page:" + pageNumber);
+            parseStampPage(pageNumber, isFirstTime);
         }
         return true;
     }
@@ -313,6 +307,7 @@ public class StampSiteParser extends AbstractStampParser{
 
     private void setCatalogNumberFromText(Stamp stamp, Document stampFullInfoDom) {
         String catalogNumberWithText = null;
+        boolean isBlock = false;
         try {
             catalogNumberWithText = (String) exprCatalogNumberWithText.evaluate(stampFullInfoDom, XPathConstants.STRING);
         } catch (XPathExpressionException e) {
@@ -322,10 +317,15 @@ public class StampSiteParser extends AbstractStampParser{
 
         while(numberMatcher.find()){
             if("b".equals(numberMatcher.group())){
-                stamp.setIsBlock(true);
-                stamp.setCatalogNumber("b");
+                isBlock = true;
+                stamp.setBlock(isBlock);
+                stamp.setCatalogNumber(catalogNumberWithText.replace(" ", ""));
             } else {
-                stamp.setCatalogNumber(appendValue(stamp.getCatalogNumber(), numberMatcher.group(), " "));
+                if(isBlock) {
+                    stamp.setBlockNumber(numberMatcher.group());
+                } else {
+                    stamp.setCatalogNumber(appendValue(stamp.getCatalogNumber(), numberMatcher.group(), " "));
+                }
             }
         }
     }

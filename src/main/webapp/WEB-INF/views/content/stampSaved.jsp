@@ -8,12 +8,15 @@
 	</head>
 	<body>
 		<script type="text/javascript">
+			returnToList = function(){
+				var stampListDivWrapper = $("#stampListPanel");
+				var stampEditPanelWrapper = $("#stampEditPanel");
 
-			function closeDialog(){
-				window.parent.$('.ui-dialog-content:visible').dialog('close')
+				stampListDivWrapper.show();
+				stampEditPanelWrapper.hide();
 			}
-			//refreshStampTable();
-			closeDialog();
+
+			returnToList();
 		</script>
 	</body>
 </html>

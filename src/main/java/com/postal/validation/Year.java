@@ -1,4 +1,6 @@
-package com.postal.validator;
+package com.postal.validation;
+
+import com.postal.validation.YearConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

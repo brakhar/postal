@@ -57,15 +57,15 @@
     </definition>
 
     <definition name="addStampPage" template="/WEB-INF/views/templates/stampTemplate.jsp">
-        <put-attribute name="stampContent" value="/WEB-INF/views/content/stampAdd.jsp" />
-    </definition>
-
-    <definition name="savedStampPage" template="/WEB-INF/views/templates/stampTemplate.jsp">
-        <put-attribute name="stampContent" value="/WEB-INF/views/content/stampSaved.jsp" />
+        <put-attribute name="stampContent" value="/WEB-INF/views/content/stampEdit.jsp" />
     </definition>
 
     <definition name="toByStampPage" extends="base">
         <put-attribute name="content" value="/WEB-INF/views/content/toBuyStamp.jsp"/>
+    </definition>
+
+    <definition name="chartPage" extends="base">
+        <put-attribute name="content" value="/WEB-INF/views/chart/chartStamp.jsp"/>
     </definition>
 
 

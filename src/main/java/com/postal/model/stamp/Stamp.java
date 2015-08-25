@@ -89,12 +89,20 @@ public class Stamp implements Serializable {
     @Column(name = "block")
     private boolean block;
 
-    @Column(name = "block_umber")
+    @Column(name = "block_number")
     private String blockNumber;
 
     @Column(name = "small_paper")
     private boolean smallPaper;
 
+    @Column(name = "small_paper_number")
+    private String smallPaperNumber;
+
+    @Column(name = "standard")
+    private boolean standard;
+
+    @Column(name = "standard_number")
+    private String standardNumber;
 
 /*
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
@@ -270,12 +278,29 @@ public class Stamp implements Serializable {
         return originalStampId;
     }
 
+    public String getBlockNumber() {
+        return blockNumber;
+    }
+
+    public void setBlockNumber(String blockNumber) {
+        this.blockNumber = blockNumber;
+    }
+
+    public String getSmallPaperNumber() {
+
+        return smallPaperNumber;
+    }
+
+    public void setSmallPaperNumber(String smallPaperNumber) {
+        this.smallPaperNumber = smallPaperNumber;
+    }
+
     public boolean isBlock() {
         return block;
     }
 
-    public void setIsBlock(boolean isBlock) {
-        this.block = isBlock;
+    public void setBlock(boolean block) {
+        this.block = block;
     }
 
     public boolean isSmallPaper() {
@@ -286,14 +311,19 @@ public class Stamp implements Serializable {
         this.smallPaper = smallPaper;
     }
 
-    public String getBlockNumber() {
-        return blockNumber;
+    public boolean isStandard() {
+        return standard;
     }
 
-    public void setBlockNumber(String blockNumber) {
-        this.blockNumber = blockNumber;
+    public void setStandard(boolean standard) {
+        this.standard = standard;
+    }
+
+    public String getStandardNumber() {
+        return standardNumber;
+    }
+
+    public void setStandardNumber(String standardNumber) {
+        this.standardNumber = standardNumber;
     }
 }
-
-
-

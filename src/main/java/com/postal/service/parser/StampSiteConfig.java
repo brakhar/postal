@@ -64,7 +64,7 @@ public class StampSiteConfig {
         stampSiteConfig.setxPathStampFullDescriptionOld(env.getProperty("xpath.stamp.fullInfo.fullDescription.old"));
 
         stampSiteConfig.setParsingKeyWordsFormat(env.getProperty("parsing.keyWords.format"));
-        stampSiteConfig.setParsingKeyWordsDenominationStamp(env.getProperty("parsing.keyWords.denominationStamp"));
+        stampSiteConfig.setParsingKeyWordsDenominationStamp(env.getProperty("parsing.keyWords.denomination"));
         stampSiteConfig.setParsingKeyWordsPerforation(env.getProperty("parsing.keyWords.perforation"));
         stampSiteConfig.setParsingKeyWordsNumberStampInPiecePaper(env.getProperty("parsing.keyWords.numberStampInPiecePaper"));
         stampSiteConfig.setParsingKeyWordsCirculation(env.getProperty("parsing.keyWords.circulation"));

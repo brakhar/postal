@@ -1,9 +1,8 @@
-package com.postal.validator;
+package com.postal.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by brakhar on 22.03.15.
